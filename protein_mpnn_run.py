@@ -66,6 +66,13 @@ def main(args):
     print_all = args.suppress_print == 0 
     omit_AAs_np = np.array([AA in omit_AAs_list for AA in alphabet]).astype(np.float32)
     device = torch.device("cuda:0" if (torch.cuda.is_available()) else "cpu")
+
+    ############
+    # limiting torch to 1 CPU if using CPU
+    if device.type == "cpu":
+        torch.set_num_threads(1)
+    ############
+
     if os.path.isfile(args.chain_id_jsonl):
         with open(args.chain_id_jsonl, 'r') as json_file:
             json_list = list(json_file)
